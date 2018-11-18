@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="crypto,Node.js,DES,">
 
 
 
@@ -94,13 +94,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="bingoli">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="引言为了保证敏感数据的安全，客户端和服务器除了使用加密协议（如https）传输之外，一般还会再对敏感数据进行加密处理，比如使用DES算法进行加密。客户端和服务器会约定使用相同的加密解密算法，但由于使用不同语言不同基础库，加密解密过程中的一些细节处理会有差异，比如填充值的值。一般客户端和服务器是由不同人的开发，且都是各自负责自己的代码，对对方的代码不太了解，就容易导致在调试过程中花费较多的时间。">
+<meta name="keywords" content="crypto,Node.js,DES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs的DES加密解密实现">
+<meta property="og:url" content="http://yoursite.com/2018/11/15/crypto-sample/index.html">
 <meta property="og:site_name" content="bingoli">
+<meta property="og:description" content="引言为了保证敏感数据的安全，客户端和服务器除了使用加密协议（如https）传输之外，一般还会再对敏感数据进行加密处理，比如使用DES算法进行加密。客户端和服务器会约定使用相同的加密解密算法，但由于使用不同语言不同基础库，加密解密过程中的一些细节处理会有差异，比如填充值的值。一般客户端和服务器是由不同人的开发，且都是各自负责自己的代码，对对方的代码不太了解，就容易导致在调试过程中花费较多的时间。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-18T16:19:51.341Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bingoli">
+<meta name="twitter:title" content="Nodejs的DES加密解密实现">
+<meta name="twitter:description" content="引言为了保证敏感数据的安全，客户端和服务器除了使用加密协议（如https）传输之外，一般还会再对敏感数据进行加密处理，比如使用DES算法进行加密。客户端和服务器会约定使用相同的加密解密算法，但由于使用不同语言不同基础库，加密解密过程中的一些细节处理会有差异，比如填充值的值。一般客户端和服务器是由不同人的开发，且都是各自负责自己的代码，对对方的代码不太了解，就容易导致在调试过程中花费较多的时间。">
 
 
 
@@ -129,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2018/11/15/crypto-sample/">
 
 
 
 
 
-  <title>bingoli</title>
+  <title>Nodejs的DES加密解密实现 | bingoli</title>
   
 
 
@@ -160,9 +165,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -245,9 +248,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -277,9 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/15/crypto-sample/" itemprop="url">Nodejs的DES加密解密实现</a></h1>
+          <h1 class="post-title" itemprop="name headline">Nodejs的DES加密解密实现</h1>
         
 
         <div class="post-meta">
@@ -329,9 +330,7 @@
       
 
       
-        
-          
-            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>为了保证敏感数据的安全，客户端和服务器除了使用加密协议（如https）传输之外，一般还会再对敏感数据进行加密处理，比如使用DES算法进行加密。客户端和服务器会约定使用相同的加密解密算法，但由于使用不同语言不同基础库，加密解密过程中的一些细节处理会有差异，比如填充值的值。一般客户端和服务器是由不同人的开发，且都是各自负责自己的代码，对对方的代码不太了解，就容易导致在调试过程中花费较多的时间。这时候，就体现出了全栈工程师的优势了，能够较快的把接口调通。今天，我先总结下在服务器使用Nodejs实现DES解密中的一些需要明确的细节。</p>
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>为了保证敏感数据的安全，客户端和服务器除了使用加密协议（如https）传输之外，一般还会再对敏感数据进行加密处理，比如使用DES算法进行加密。客户端和服务器会约定使用相同的加密解密算法，但由于使用不同语言不同基础库，加密解密过程中的一些细节处理会有差异，比如填充值的值。一般客户端和服务器是由不同人的开发，且都是各自负责自己的代码，对对方的代码不太了解，就容易导致在调试过程中花费较多的时间。这时候，就体现出了全栈工程师的优势了，能够较快的把接口调通。今天，我先总结下在服务器使用Nodejs实现DES解密中的一些需要明确的细节。</p>
 <h2 id="DES加密解密示例"><a href="#DES加密解密示例" class="headerlink" title="DES加密解密示例"></a>DES加密解密示例</h2><p>Nodejs的Crypto模块封装了各种加密解密的算法，可以非常方便的使用。我今天选用了DES-CBC算法。<br>加密算法的调用过程中如下：</p>
 <ol>
 <li>通过crypto.createCipheriv创建一个加密对象。</li>
@@ -352,8 +351,6 @@
 </ul>
 <h2 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h2><p>bingoli<br>微信公众号：bingoli<br>Blog: <a href="https://bingoli.github.io/" target="_blank" rel="noopener">https://bingoli.github.io/</a><br>GitHub: <a href="https://github.com/bingoli" target="_blank" rel="noopener">https://github.com/bingoli</a></p>
 
-          
-        
       
     </div>
     
@@ -368,138 +365,40 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="bingoli">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="bingoli">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/01/hello-world/" itemprop="url">Hello World 全新出发</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-01T21:50:46+08:00">
-                2018-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/crypto/" rel="tag"># crypto</a>
           
-            
+            <a href="/tags/Node-js/" rel="tag"># Node.js</a>
           
-
+            <a href="/tags/DES/" rel="tag"># DES</a>
           
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>大家好！我是bingoli，这是我新开通的博客。</p>
-<p>我是一个资深的C++程序员，主要从事浏览器相关开发，包括功能开发、性能优化、崩溃处理、运营支撑等。我之前的工作重点是浏览器客户端的开发，因此，我对Chromium的部分原理有比较深的研究，包括编译、Base库、Chrome View、插件体系等。目前是一名全栈工程师，也正在参与前端、后台的相关开发。</p>
-<p>由于工作需要，我近期在不断学习新知识，参考了不少人的博客和分享，感觉受益匪浅。在工作中，我也经常跟同事们分享自己的知识、经验和工作体会，但是，仍然觉得分享和总结的频率不够。我开通这个博客就是希望能够督促自己更好的总结相关经验。如果我的分享也能让你有所收获，那我是更高兴的。</p>
-<p>在我的博客里，我会陆续发布我之前总结的一些知识，也会发布自己最新探索的知识，欢迎大家的批评与指证。</p>
-<h2 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h2><p>bingoli<br>微信公众号：bingoli<br>Blog: <a href="https://bingoli.github.io/" target="_blank" rel="noopener">https://bingoli.github.io/</a><br>GitHub: <a href="https://github.com/bingoli" target="_blank" rel="noopener">https://github.com/bingoli</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/01/hello-world/" rel="next" title="Hello World 全新出发">
+                <i class="fa fa-chevron-left"></i> Hello World 全新出发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -509,10 +408,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -520,6 +420,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -540,8 +444,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="bingoli">
           <p class="site-author-name" itemprop="name">bingoli</p>
@@ -605,6 +518,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DES加密解密示例"><span class="nav-number">2.</span> <span class="nav-text">DES加密解密示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码的使用"><span class="nav-number">3.</span> <span class="nav-text">密码的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动填充字段"><span class="nav-number">4.</span> <span class="nav-text">自动填充字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Buffer的使用"><span class="nav-number">5.</span> <span class="nav-text">Buffer的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于作者"><span class="nav-number">8.</span> <span class="nav-text">关于作者</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -725,10 +654,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
