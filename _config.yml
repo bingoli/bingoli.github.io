@@ -79,5 +79,5 @@ theme: landscape
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git 
-  repo: https://sh_token@github.com/bingoli/bingoli.github.io.git
+  repo: https://gh_token@github.com/bingoli/bingoli.github.io.git
   branch: master
