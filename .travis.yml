@@ -22,6 +22,7 @@ before_install:
 install:
   - npm install
   - npm install hexo-deployer-git --save
+  - npm i hexo-generator-json-content --save
 
 # 执行清缓存，生成网页操作
 script:

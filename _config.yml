@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: Bingoli
 subtitle:
 description:
 keywords:
-author: John Doe
-language:
+author: bingoli
+language: zh-Hans
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://bingoli.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: yilia
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -82,3 +82,22 @@ deploy:
   type: git 
   repo: https://gh_token@github.com/bingoli/bingoli.github.io.git
   branch: master
+
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true
