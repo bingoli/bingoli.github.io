@@ -48,6 +48,7 @@ User bingoli
 ```
 ssh server
 ```
+从此以后，登录服务器就简单多了。
 
 ## 关于作者
 bingoli
