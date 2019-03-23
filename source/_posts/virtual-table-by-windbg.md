@@ -1,5 +1,5 @@
 ---
-title: virtual_table_by_windbg
+title: 使用Windbg分析C++类对象的虚函数表
 date: 2019-03-21 23:24:29
 tags:
  - C++
