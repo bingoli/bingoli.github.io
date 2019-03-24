@@ -158,45 +158,7 @@ sample1!CB::Fun1 [c:\bingo\github\samples\cplusplus\inside-object\sample2\main.c
 sample1!ILT+770(?Fun1CBUAEXXZ):
 00a21307 e9f4040000      jmp     sample1!CB::Fun1 (00a21800)  Branch
 ```
-从反汇编的结果来看，00a21800是CB::Fun1的入口地址。那0xa21307是指向哪的呢？先使用dd命令来看下内存值，通过值可以看出，不是sample1.exe地址空间内的值，那就可能是汇编语言，直接通过u命令进行反汇编看看。
-```
-0:000> dd 0xa21307
-00a21307  0004f4e9 09dfe900 3ae90000 e9000005
-00a21317  00000985 000f40e9 099be900 c6e90000
-00a21327  e900000b 00000501 cccccccc cccccccc
-00a21337  cccccccc cccccccc cccccccc cccccccc
-00a21347  cccccccc cccccccc cccccccc cccccccc
-00a21357  cccccccc cccccccc cccccccc cccccccc
-00a21367  cccccccc cccccccc cccccccc cccccccc
-00a21377  cccccccc cccccccc cccccccc cccccccc
-0:000> lmf
-start    end        module name
-00a20000 00a32000   sample1  sample1.exe 
-0f560000 0f57b000   VCRUNTIME140D C:\WINDOWS\SysWOW64\VCRUNTIME140D.dll
-0f790000 0f847000   MSVCP140D C:\WINDOWS\SysWOW64\MSVCP140D.dll
-0ffa0000 10114000   ucrtbased C:\WINDOWS\SysWOW64\ucrtbased.dll
-75080000 7527a000   KERNELBASE C:\WINDOWS\SysWOW64\KERNELBASE.dll
-75b00000 75be0000   KERNEL32 C:\WINDOWS\SysWOW64\KERNEL32.DLL
-779b0000 77b4c000   ntdll    ntdll.dll   
-0:000> u 0xa21307
-sample1!ILT+770(?Fun1CBUAEXXZ):
-00a21307 e9f4040000      jmp     sample1!CB::Fun1 (00a21800)
-sample1!ILT+775(?Fun2CBUAEXXZ):
-00a2130c e9df090000      jmp     sample1!CB::Fun2 (00a21cf0)
-sample1!ILT+780(?Fun3CAQAEXXZ):
-00a21311 e93a050000      jmp     sample1!CA::Fun3 (00a21850)
-sample1!ILT+785(?Fun2CAQAEXXZ):
-00a21316 e985090000      jmp     sample1!CA::Fun2 (00a21ca0)
-sample1!ILT+790(?Fun1CAQAEXXZ):
-00a2131b e9400f0000      jmp     sample1!CA::Fun1 (00a22260)
-sample1!ILT+795(?Fun4CBQAEXXZ):
-00a21320 e99b090000      jmp     sample1!CB::Fun4 (00a21cc0)
-sample1!ILT+800(?Fun3CBQAEXXZ):
-00a21325 e9c60b0000      jmp     sample1!CB::Fun3 (00a21ef0)
-sample1!ILT+805(?Fun4CAQAEXXZ):
-00a2132a e901050000      jmp     sample1!CA::Fun4 (00a21830)
-```
-原来，0xa21307指向的值是跳转到CB::Fun1函数的命令。
+从反汇编的结果来看，00a21800是CB::Fun1的入口地址，而0xa21307指向的值是跳转到CB::Fun1函数的命令，也就是说，虚函数表保存的是一个跳转命令。
 ## 小结
 通过windbg工具辅助，把很多VS不能显示信息展示出来，能够了解更多C++虚函数表的实现细节，对掌握C++的相关原理很有帮助。后续，我还会用windbg分析更多的实例。
 ## 关于作者
