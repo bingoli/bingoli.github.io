@@ -15,16 +15,16 @@ tags:
 本文示例中的服务器ip地址为192.168.1.1，ssh端口为22。
 
 ## 客户端生成密钥
-客户端生成密钥的方法很简单，只需要使用ssh-keygen命令。
+客户端生成密钥的方法很简单，只需要使用ssh-keygen命令。
 ```
 ssh-keygen -t rsa
 ```
-生成密钥过程中，建议采用默认值，只需要按三次回车之后，就会再～/.ssh目录下生成密钥文件，其中，id_rsa为私钥，id_rsa.pub为公钥。
+生成密钥过程中，建议采用默认值，只需要按三次回车之后，就会再～/.ssh目录下生成密钥文件，其中，id_rsa为私钥，id_rsa.pub为公钥。
 
 ## 服务器配置
-服务器的~/.ssh/authorized_keys文件保存可快速连接的客户端的公钥。只需把客户端生成的id_rsa.pub文件的内容拷贝到authorized_keys文件的末尾。拷贝的方法有：
-1. 直接拷贝。由于id_rsa.pub和authorized_keys都是文本文件，可通过拷贝命令直接拷贝。
-2. 把id_rsa.pub上传到服务器，然后再把内容添加到authorized_keys文件中。
+服务器的~/.ssh/authorized_keys文件保存可快速连接的客户端的公钥。只需把客户端生成的id_rsa.pub文件的内容拷贝到authorized_keys文件的末尾。拷贝的方法有：
+1. 直接拷贝。由于id_rsa.pub和authorized_keys都是文本文件，可通过拷贝命令直接拷贝。
+2. 把id_rsa.pub上传到服务器，然后再把内容添加到authorized_keys文件中。
 在客户端把文件上传到服务器的用户目录的操作命令如下：
 ```
 scp ~/.ssh/id_rsa.pub root@192.168.1.1:
@@ -33,10 +33,10 @@ scp ~/.ssh/id_rsa.pub root@192.168.1.1:
 ```
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 ```
-配置好之后，登录服务器就不再需要密码了。
+配置好之后，登录服务器就不再需要密码了。
 
 ## 在客户端配置服务器登录相关参数
-除了密码之外，登录时，还需要配置ip地址、端口、用户等信息，也比较繁琐。可通过客户端的~/.ssh/config配置服务器的相关参数简化登录命令。
+除了密码之外，登录时，还需要配置ip地址、端口、用户等信息，也比较繁琐。可通过客户端的~/.ssh/config配置服务器的相关参数简化登录命令。
 config文件的配置内容如下：
 ```
 Host server
@@ -44,7 +44,7 @@ Hostname 192.168.1.1
 Port 22
 User bingoli
 ```
-其中，Host为服务器的名称，输入登录命令时使用，后续登录只需要记住这个名字就可以；Hostname为服务器的ip地址；Port为ssh的端口；User为服务器的用户名。配置好相关参数之后，就可以使用简化的命令登录服务器了。
+其中，Host为服务器的名称，输入登录命令时使用，后续登录只需要记住这个名字就可以；Hostname为服务器的ip地址；Port为ssh的端口；User为服务器的用户名。配置好相关参数之后，就可以使用简化的命令登录服务器了。
 ```
 ssh server
 ```
@@ -52,7 +52,7 @@ ssh server
 
 ## 关于作者
 bingoli
-微信公众号：bingoli
+微信公众号：bingoli
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli
 
