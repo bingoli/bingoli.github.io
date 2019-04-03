@@ -97,7 +97,7 @@ Nodejs使用起来非常方便，尤其是C++程序员感受明显。同样是�
 - [NodeJS开发文档](https://nodejs.org/api/crypto.html)
 
 ## 关于作者
-bingoli
-微信公众号：bingoli
+微信公众号：程序员bingo
+![公众号：程序员bingo](bingo_wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli

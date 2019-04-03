@@ -108,8 +108,8 @@ console.log(str2Date('20181101000000').toString());
 通过这个例子说明，每个函数的异常处理都有可能导致最终的结果出错，如果使用了系统函数或者其他库的函数，都需要对每个函数的异常处理有足够的了解，才能保证结果符合预期。
 
 ## 关于作者
-bingoli
-微信公众号：bingoli
+微信公众号：程序员bingo
+![公众号：程序员bingo](bingo_wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli
 

@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: bingoli的博客
-subtitle: 闲云野鹤
+title: 程序员bingo
+subtitle: bingo的技术原创分享
 description:
 keywords:
-author: bingoli
+author: 程序员bingo
 language: zh-Hans
 timezone:
 
@@ -35,7 +35,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:

@@ -14,7 +14,7 @@ tags:
 在我的博客里，我会陆续发布我之前总结的一些知识，也会发布自己最新探索的知识，欢迎大家的批评与指证。
 
 ## 关于作者
-bingoli
-微信公众号：bingoli
+微信公众号：程序员bingo
+![公众号：程序员bingo](bingo_wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli

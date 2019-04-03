@@ -1,5 +1,5 @@
 ---
-title: Windbg使用系列（2）：C++的多重继承实现原理
+title: 使用Windbg分析C++的多重继承原理
 date: 2019-03-27 06:35:56
 tags:
  - C++
@@ -147,9 +147,7 @@ Local var @ 0x53fe84 Type CB*
 ## 结语
 类的类型转换，在实际使用过程中，很容易造成各种问题。如果使用了多重继承，更是加大了出现问题的概率。了解了多重继承的原理，我们在实际调试中，才能更好去调试软件的异常，从而修复并规避相关问题的出现。
 ## 关于作者
-bingoli
-微信公众号：bingoli
+微信公众号：程序员bingo
+![公众号：程序员bingo](bingo_wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli
-
-
