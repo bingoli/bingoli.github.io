@@ -1,5 +1,5 @@
 ---
-title: Windbg使用系列（1）：分析虚函数表
+title: 使用Windbg分析C++的虚函数表原理
 date: 2019-03-21 23:24:29
 tags:
  - C++
