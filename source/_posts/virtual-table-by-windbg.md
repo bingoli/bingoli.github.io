@@ -164,6 +164,6 @@ sample1!ILT+770(?Fun1CBUAEXXZ):
 通过windbg工具辅助，把很多VS不能显示信息展示出来，能够了解更多C++虚函数表的实现细节，对掌握C++的相关原理很有帮助。后续，我还会用windbg分析更多的实例。
 ## 关于作者
 微信公众号：程序员bingo
-![公众号：程序员bingo](bingo_wechat.jpeg)
+![微信公众号：程序员bingo](https://bingoli.github.io/wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli

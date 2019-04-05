@@ -148,6 +148,6 @@ Local var @ 0x53fe84 Type CB*
 类的类型转换，在实际使用过程中，很容易造成各种问题。如果使用了多重继承，更是加大了出现问题的概率。了解了多重继承的原理，我们在实际调试中，才能更好去调试软件的异常，从而修复并规避相关问题的出现。
 ## 关于作者
 微信公众号：程序员bingo
-![公众号：程序员bingo](bingo_wechat.jpeg)
+![微信公众号：程序员bingo](https://bingoli.github.io/wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli

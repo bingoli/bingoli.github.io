@@ -68,6 +68,6 @@ L"Chrome"
 这个最终结果就符合预期了。有了窄字符转换为宽字符的宏，同一字符串就只需要修改一次了。
 ## 关于作者
 微信公众号：程序员bingo
-![公众号：程序员bingo](bingo_wechat.jpeg)
+![微信公众号：程序员bingo](https://bingoli.github.io/wechat.jpeg)
 Blog: https://bingoli.github.io/
 GitHub: https://github.com/bingoli
