@@ -10,38 +10,56 @@ tags:
 ---
 
 # 摘要
+
 - 分析卡死问题时，可结合WPT和Windbg一起分析。
 - Electron弹出的打开文件对话框存在必现的卡死场景，原因是弹窗线程COM反初始化卡死，而主线程在同步等待弹窗线程销毁。
 - Electron的部分代码还没及时跟上Chromium的改动，分析Electron的问题时，可多跟最新版Chrome进行对比。
 
 # 问题现象
+
 测试同学在基于Electron Windows的App上测试发送图片时，出现了整个界面卡死。
+
 # 现场信息分析
+
 ### 现场信息捕获
+
 在测试同学测试时，出现了卡死，保留有现场。分别用以下工具抓取相关信息。
+
 - Windows Performance Toolkit，抓取了系统的Trace信息。
 - Process Explorer，抓取了主进程的Dump。
 
 ### 使用WPT分析Trace
+
 ### UI Delays分析
+
 通过WPA的UI Delays可以捕获到UI卡死相关信息。
+
 - MsgCheck Delay为消息队列被阻塞
 - Input Delay为输入队列被阻塞
+
 从下面的数据可看出，主线程和文件弹窗线程都被卡死了，且都被卡主了295s，因此，这两个线程之前的卡死可能存在关联性。
+
 ![ui_delays](https://bingoli.github.io/electron_open_file_dialog_hang_ui_delays.png)
 
 ### CPU占用分析
+
 在Trace的CPU占用统计中，没有捕获到这两个线程的相关信息，原因是这两个线程已经被挂起了，CPU消耗很少。只能通过其他方法对问题进一步分析。
+
 ![WPT捕获的线程](https://bingoli.github.io/electron_open_file_dialog_hang_wpt_threads.png)
 
 ### 结论
+
 根据已有线索进行推论：有2个线程被卡死了，可能存在关联。
+
 - 主线程，id 6028, 0x178c
 - ElectronFileDialogThread线程，id 10076，0x275c
 
 ## 使用Windbg分析Dump
+
 ### Dump详情
+
 相关操作
+
 - 打开Dump，加载符号
 - 查看卡死线程调用栈信息
 
@@ -77,12 +95,13 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 0e 095bf790 01ba1e03 Electron!base::MessageLoopImpl::Run+0x1f
 
 根据上面的信息可得出，当前卡死的线程id为线程0x178c，即主线程。调用栈信息表明，主线程之所以卡死了，是因为在等待另一个线程结束。要知道是在等待哪个线程，就需要拿到该线程的进一步信息。切换到对应的调用函数，查看相关变量的值即可获取到线程信息，即Thread变量的值。
+
 > ||0:0:000> .frame 05
 > 05 095bf57c 00348551 Electron!base::Thread::~Thread+0xb
 
 > ||0:0:000> dx this
 > this                 : 0x1a67dea0 [Type: base::Thread \*]
->     [+0x004] com_status_      : STA (1) [Type: base::Thread::ComStatus]
+>     [+0x004] com_status_      : STA (1) [Type: base::Thread::ComStatus
 >     [+0x008] joinable_        : true [Type: bool]
 >     [+0x009] stopping_        : true [Type: bool]
 >     [+0x00a] running_         : false [Type: bool]
@@ -148,13 +167,18 @@ WARNING: Stack unwind information not available. Following frames may be wrong.
 > 24 2675f95c 00000000 ntdll!_RtlUserThreadStart+0x1b
 
 FileDialog线程卡死，是在CoUninitialize时在等待某些COM接口的断开连接操作。
+
 ### 结论
+
 - 主线程被卡死了，是因为在等待ElectronFileDialogThread线程结束。
 - ElectronFileDialogThread线程被卡死了，是因为在COM反初始化CoUninitialize时卡死了。
 
 # 代码分析
+
 ## Electron相关代码
+
 根据现有线索，其中一个线程名为ElectronFileDialogThread。使用ElectronFileDialogThread在代码中搜索，未搜索到相关信息。通过FileDialogThread，搜索到了相关代码。
+
 ``` C++
 bool CreateDialogThread(RunState* run_state) {
   auto thread =
@@ -168,7 +192,9 @@ bool CreateDialogThread(RunState* run_state) {
   return true;
 }
 ```
+
 根据代码往前追溯发现，主线程接收到文件选择弹窗时，会先创建一个新线程，然后把弹窗任务抛到新线程去执行。主线程的相关代码如下：
+
 ``` C++
 void ShowOpenDialog(const DialogSettings& settings,
                     const OpenDialogCallback& callback) {
@@ -183,10 +209,12 @@ void ShowOpenDialog(const DialogSettings& settings,
       base::Bind(&RunOpenDialogInNewThread, run_state, settings, callback));
 }
 ```
+
 弹窗的具体实现由FileDailog线程完成，相关步骤有
 - 弹窗，等待用户交互，用户操作后返回。
 - 把用户选择的路径通过回调返回给主线程。
 - 通知主线程可以把当前线程删除。
+
 ``` C++
 void RunOpenDialogInNewThread(const RunState& run_state,
                               const DialogSettings& settings,
@@ -198,7 +226,9 @@ void RunOpenDialogInNewThread(const RunState& run_state,
   run_state.ui_task_runner->DeleteSoon(FROM_HERE, run_state.dialog_thread);
 }
 ```
+
 最后一步调用DeleteSoon的作用，就是通知主线程在callback调用结束之后，删除FileDialog线程。
+
 ``` C++
   template <class T>
   bool DeleteSoon(const Location& from_here, const T* object) {
@@ -213,8 +243,11 @@ class DeleteHelper {
   }
 };
 ```
+
 ## FileDialog线程的COM相关代码
+
 FileDialog线程的卡死跟COM有关，因此，需要分析下与COM有关的代码。其中，FileDialog线程采用的COM线程模型为STA。因此，线程启动和结束时，分别会调用ScopedCOMInitializer封装的COM初始化和反初始化CoUninitalize。
+
 ``` C++
   void init_com_with_mta(bool use_mta) {
     DCHECK(!delegate_);
@@ -229,16 +262,25 @@ FileDialog线程的卡死跟COM有关，因此，需要分析下与COM有关的�
             : new win::ScopedCOMInitializer(win::ScopedCOMInitializer::kMTA));
   }
 ```
+
 # 修复方案
+
 这里面有2个问题需要解决
+
 - FileDialog线程的销毁卡死问题
 - 主线程不应该同步等待其他线程结束
-FileDialog线程COM反初始化卡死问题处理
-代码分析与查看文档相结合
+
+## FileDialog线程COM反初始化卡死问题处理
+
+### 代码分析与查看文档相结合
+
 由于已经知道跟COM有关，主要从以下两个方面入手：
+
 - 排查FileDialog线程中与COM有关的代码，是否存在误用，如资源未释放的问题。
 - 通过MSDN查询与COM有关的文档。
+
 该问题是测试同学发现的问题，有一定复现概率，通过之前录得视频发现，测试同学进行了拖动操作，会跟OLE相关。查询MSDN了解到，在执行文件的拖放操作之前，必须要调用Ole初始化OleInitialize，否则可能会有问题。
+
 > Applications that use the following functionality must call OleInitialize before calling any other function in the COM library:
 > - Clipboard
 > - Drag and Drop
@@ -246,12 +288,17 @@ FileDialog线程COM反初始化卡死问题处理
 > - In-place activation
 
 从代码中可以看出，FileDialog线程是没有进行OLE初始化的，而MSDN说明拖动必然依赖OLE初始化，因此，这是一个矛盾点。于是，把相关操作进行试验发现，如果在打开文件弹窗内进行拖动操作，是可以稳定复现这个卡顿的。
-使用OLE初始化替换COM初始化
+
+### 使用OLE初始化替换COM初始化
+
 要解决这个问题，只需要在FileDailog线程中，用OLE替代COM的初始化和反初始化。
 通过前面的代码可以看出，Thread的变量com_status_==NONE时，是不会进行COM初始化。因此，修复方案如下：
+
 - 删除CreateDialogThread函数的thread->init_com_with_mta(false)操作。
 - 在线程的初始化添加OLE的初始化。
+
 为了对原有的代码浸入较小，本方案对base::Thread类进行了继承。对已有代码，只有2行代码的改动，其他都是新增代码。
+
 ``` C++
 class FileDialogThead : public base::Thread {
 public:
@@ -277,10 +324,16 @@ bool CreateDialogThread(RunState* run_state) {
   return true;
 }
 ```
+
 通过实验发现，这种修复方式，把这个必现的bug变成了一个偶现的bug。这就说明，COM反初始化还有其他的坑，暂时还没有找到原因。本次修复策略，只是缓解了问题，没有彻底解决问题。
+
 ## 去除主线程的同步等待
+
 由于找到了必现步骤，经过测试发现，Electron最新版和Chrome 66版本都能稳定复现，但Chrome 79内核版本修复了该问题。因此，只需要参考Chrome的修复方案即可。通过查看代码发现，Chrome主要有以下改动：
+
 - 增加了线程池，FileDialog线程不会实时销毁。
+- FileDailog线程已经移出了主进程，跟主进程无关。
+
 ``` C++
 scoped_refptr<base::SingleThreadTaskRunner> CreateDialogTaskRunner() {
   return CreateCOMSTATaskRunner(
@@ -289,13 +342,18 @@ scoped_refptr<base::SingleThreadTaskRunner> CreateDialogTaskRunner() {
     base::SingleThreadTaskRunnerThreadMode::DEDICATED);
 }
 ```
-- FileDailog线程已经移出了主进程，跟主进程无关。
+
 # 后记
+
 Electron的部分代码是从较早版本的Chromium拷贝过来，没有及时跟上Chromium的步伐。Electron同步Chromium的最新代码，应该是可以为Electron开源社区做的一个事。
+
 # 参考资料
+
 - [MsgCheck说明](https://social.msdn.microsoft.com/Forums/en-US/633d889d-7d4d-4f11-8422-7213cd8c228b/in-wpa-what-is-delay-typemsgcheck-and-where-can-i-get-more-information-about-it?forum=windbg)
 - [Chromium源码](https://cs.chromium.org/chromium/src/ui/shell_dialogs/base_shell_dialog_win.cc?q=base_shell&sq=package:chromium&g=0&l=5)
+
 # 关于作者
+
 微信公众号：程序员bingo
 ![微信公众号：程序员bingo](https://bingoli.github.io/wechat.jpeg)
 Blog: https://bingoli.github.io/
