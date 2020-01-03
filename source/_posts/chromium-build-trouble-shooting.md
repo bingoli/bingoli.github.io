@@ -7,22 +7,33 @@ tags:
  - gn
  - ninja
 ---
+
 ## 前言
+
 Chromium编译时，会遇到各种各样的问题，本文用例记录在实践过程中碰到的问题，以便后面碰到类似的问题，能够更快速解决。
+
 ## 编译问题
+
 ### windows下的python组件
+
+错误提示：
+
 > Traceback (most recent call last):
->   File "../../build/toolchain/win/tool_wrapper.py", line 51, in <module>
+>   File "../../build/toolchain/win/tool_wrapper.py", line 51, in &lt;module>
 >     import win32file    # pylint: disable=import-error
 > ImportError: No module named 
 
 解决方法：安装win32file模块。
+
 > python -m pip install 
 
 ### win10 sdk安装失败
+
+错误提示：
+
 > C:/Python27/python.exe ../../build/win/copy_cdb_to_output.py cdb x64
 > Traceback (most recent call last):
->   File "../../build/win/copy_cdb_to_output.py", line 121, in <module>
+>   File "../../build/win/copy_cdb_to_output.py", line 121, in &lt;module>
 >     sys.exit(main())
 >   File "../../build/win/copy_cdb_to_output.py", line 117, in main
 >     return _CopyCDBToOutput(sys.argv[1], sys.argv[2])
@@ -40,14 +51,19 @@ Chromium编译时，会遇到各种各样的问题，本文用例记录在实践
 问题原因：未安装win10sdk，或者未安装x64的sdk。
 解决方法：重新安装win10 sdk，下载地址：
 https://developer.microsoft.com/zh-cn/windows/downloads/windows-10-sdk 
+如果发现SDK安装不了，需要把原来的SDK先卸载了。
 
 ### gn的问题
+
+错误提示：
 > gn.py: Could not find checkout in any parent of the current path.
 > This must be run inside a checkout.
+
+
 问题原因：gn需要去查找buildtools的路径，首先会查找环境变量CHROMIUM_BUILDTOOLS_PATH的值，然后查找.gclient所在目录，并查找该目录下的src/buildtools，如果.gclient不存在，就会出现上面的错误。在把chromium的代码拷贝到github的时候，有时会不注意这个细节。
-解决方案：
 
 有2种解决方法
+
 * 设置环境变量CHROMIUM_BUILDTOOLS_PATH的值未src目录下buildtools的路径。
 * 在src的上一级目录，保留.gclient和.gclient_entries。
 
