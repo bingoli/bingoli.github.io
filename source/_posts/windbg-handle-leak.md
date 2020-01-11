@@ -21,6 +21,7 @@ tags:
 ![微信公众号：程序员bingo](https://bingoli.github.io/windbg-handle-leak-task-manager.png)
 
 ### Process Explorer
+Process Explorer查看进程详细信息，在Performance的内容中，包括了进程的句柄数量统计。
 
 ![微信公众号：程序员bingo](https://bingoli.github.io/windbg-handle-leak-process-explorer.png)
 
@@ -42,7 +43,15 @@ tags:
 > ALPC Port      	1
 > WaitCompletionPacket	8
 
-通过上面数据可以看出，当前已打开的句柄的主要为Thread。
+通过上面数据可以看出，当前已打开的句柄的主要为Thread。而通过~*查询发现，当前进程只有2个线程，打开这么多线程句柄是异常的。
+
+> 0:001> **~\***
+>    0  Id: 51c0.85a4 Suspend: 1 Teb: 00626000 Unfrozen
+>       Start: handle_leak!ILT+825(_mainCRTStartup) (00a1133e)
+>       Priority: 0  Priority class: 32  Affinity: fff
+> .  1  Id: 51c0.3ad8 Suspend: 1 Teb: 0063b000 Unfrozen
+>       Start: ntdll!DbgUiRemoteBreakin (7775abe0)
+>       Priority: 0  Priority class: 32  Affinity: fff
 
 # 使用Windbg分析Thread句柄泄露的原因
 
@@ -152,7 +161,7 @@ tags:
 
 # 代码分析
 
-本文内存泄露的一个简化例子，所以看下代码，很容易就知道句柄泄露的原因。如果是大型工程的话， 可能需要更详细大的分析。本文使用的代码如下：
+本文内存泄露的一个简化例子，看下代码，很容易就知道句柄泄露的原因，就是因为手误注释掉了CloseHandle，打开线程句柄之后未关闭句柄。如果是大型工程的话，可能需要更详细大的分析。本文使用的代码如下：
 
 ``` C++
 #include <iostream>
