@@ -16,12 +16,12 @@ tags:
 
 ### 任务管理器
 
-句柄列默认是隐藏的，需要通过配置把句柄列显示。
+句柄列默认是隐藏的，需要通过“选择列”配置把句柄列显示。
 
 ![微信公众号：程序员bingo](https://bingoli.github.io/windbg-handle-leak-task-manager.png)
 
 ### Process Explorer
-Process Explorer查看进程详细信息，在Performance的内容中，包括了进程的句柄数量统计。
+Process Explorer查看进程详细信息，在Performance标签的内容中，包括了进程的句柄数量统计。
 
 ![微信公众号：程序员bingo](https://bingoli.github.io/windbg-handle-leak-process-explorer.png)
 
