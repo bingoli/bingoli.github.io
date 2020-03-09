@@ -10,6 +10,15 @@ tags:
 > .load wow64exts
 > !sw
 
+### 转储dump
+
+minidump
+> .dump /m d:\mydump.dmp
+
+fulldump
+> .dump /mf d:\mydump.dmp
+
+
 # 关于作者
 微信公众号：程序员bingo
 ![微信公众号：程序员bingo](https://bingoli.github.io/wechat.jpeg)
