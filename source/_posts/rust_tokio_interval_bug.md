@@ -1,10 +1,14 @@
 ---
-title: rust tokio库interval的时间处理的坑
+title: 小心，定时器可能让你的CPU爆满
 date: 2020-3-5 21:03:11
 tags:
 - rust
 - tokio
+- WPT
+- Instruments
 ---
+
+使用rust tokio Interval作为定时器，可能会在系统休眠或进程挂起恢复后，CPU爆满，甚至导致死机，Windows、iOS、Android都有这个问题。
 
 # 引言
 
@@ -84,6 +88,7 @@ pub fn test_interval() {
 > 2, 14:08:19, now: Instant { t: 1287694.9086322s }, deadline: Instant { t: 1287694.9079829s }
 > ***
 > 16, 14:08:33, now: Instant { t: 1287708.9085874s }, deadline: Instant { t: 1287708.9079829s }
+> ***
 > 17, 14:15:05, now: Instant { t: 1288101.05249s }, deadline: Instant { t: 1287709.9079829s }
 > 18, 14:15:05, now: Instant { t: 1288101.0528517s }, deadline: Instant { t: 1287710.9079829s }
 > ***
@@ -118,6 +123,7 @@ pub fn test_interval() {
 > 1, 11:09:58, now: Instant { tv_sec: 3437, tv_nsec: 200974533 }, deadline: Instant { tv_sec: 3437, tv_nsec: 199134350 }
 > ***
 > 14, 11:10:11, now: Instant { tv_sec: 3450, tv_nsec: 200868087 }, deadline: Instant { tv_sec: 3450, tv_nsec: 199134350 }
+> ***
 > 15, 11:31:52, now: Instant { tv_sec: 3452, tv_nsec: 388860753 }, deadline: Instant { tv_sec: 3451, tv_nsec: 199134350 }
 > 16, 11:31:52, now: Instant { tv_sec: 3452, tv_nsec: 389004878 }, deadline: Instant { tv_sec: 3452, tv_nsec: 199134350 }
 > 17, 11:31:53, now: Instant { tv_sec: 3453, tv_nsec: 201303263 }, deadline: Instant { tv_sec: 3453, tv_nsec: 199134350 }
@@ -348,6 +354,8 @@ impl Stream for Interval {
     }
 }
 ```
+
+本文使用的tokio版本为0.1.13，但看了目前最新的0.2.13，也是同样的实现方式。
 
 # 关于作者
 微信公众号：程序员bingo
