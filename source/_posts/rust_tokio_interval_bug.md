@@ -14,6 +14,8 @@ tags:
 
 在Win10系统（CPU 12核）休眠恢复之后，发现rust进程的CPU占比超过6%，相当于1个CPU核的70%。于是，赶紧用WPT抓了一个现场。通过WPT分析，发现CPU主要被其中一个线程消耗。
 
+![微信公众号：程序员bingo](https://bingoli.github.io/tokio_interval_windows_cpu_high.png)
+
 # 其他平台的测试验证
 
 由于rust代码是跨平台的SDK，因此，也需要验证下其他平台是否有同样的问题。
@@ -21,6 +23,8 @@ tags:
 ## iOS
 
 使用Instruments抓了iOS与Windows类似场景，消耗CPU最多的也是这个线程。
+
+![微信公众号：程序员bingo](https://bingoli.github.io/tokio_interval_ios_cpu_high.png)
 
 ## Mac
 
